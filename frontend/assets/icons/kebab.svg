@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <linearGradient id="stickGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D7CCC8" />
+      <stop offset="100%" stop-color="#8D6E63" />
+    </linearGradient>
+    <linearGradient id="meatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A1887F" />
+      <stop offset="50%" stop-color="#5D4037" />
+      <stop offset="100%" stop-color="#3E2723" />
+    </linearGradient>
+  </defs>
+  <g transform="rotate(-35 50 50)">
+    <!-- Wooden Skewer 1 -->
+    <line x1="50" y1="10" x2="50" y2="92" stroke="url(#stickGrad)" stroke-width="3" stroke-linecap="round" />
+    
+    <!-- Skewer items top to bottom -->
+    <!-- Meat chunk 1 -->
+    <rect x="36" y="22" width="28" height="13" rx="4" fill="url(#meatGrad)" stroke="#271202" stroke-width="2" />
+    <!-- Grill marks -->
+    <line x1="42" y1="24" x2="44" y2="33" stroke="#211005" stroke-width="2" />
+    <line x1="56" y1="24" x2="58" y2="33" stroke="#211005" stroke-width="2" />
+    
+    <!-- Red Bell Pepper slice -->
+    <rect x="34" y="37" width="32" height="7" rx="3.5" fill="#E53935" stroke="#B71C1C" stroke-width="1.8" />
+    
+    <!-- Onion / Veggie -->
+    <rect x="38" y="46" width="24" height="6" rx="3" fill="#FFF9C4" stroke="#FBC02D" stroke-width="1.5" />
+    
+    <!-- Meat chunk 2 -->
+    <rect x="34" y="54" width="32" height="14" rx="4" fill="url(#meatGrad)" stroke="#271202" stroke-width="2" />
+    <line x1="40" y1="56" x2="42" y2="66" stroke="#211005" stroke-width="2" />
+    <line x1="54" y1="56" x2="56" y2="66" stroke="#211005" stroke-width="2" />
+    <line x1="59" y1="56" x2="61" y2="66" stroke="#211005" stroke-width="2" />
+    
+    <!-- Green Pepper slice -->
+    <rect x="35" y="70" width="30" height="7" rx="3.5" fill="#43A047" stroke="#1B5E20" stroke-width="1.8" />
+    
+    <!-- Wooden tip handle -->
+    <line x1="50" y1="78" x2="50" y2="92" stroke="#8D6E63" stroke-width="4.5" stroke-linecap="round" />
+  </g>
+</svg>

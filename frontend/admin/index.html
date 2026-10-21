@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Greedy Wheel • Game Command Center</title>
+    <link rel="icon" href="../assets/icons/hotdog.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div class="admin-app">
+        <!-- Top Navbar -->
+        <header class="admin-navbar">
+            <div class="nav-left">
+                <button type="button" class="btn-sidebar-toggle" id="btnSidebarToggle" aria-label="Toggle Side Menu">
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                </button>
+                <div class="nav-brand">
+                    <div class="brand-emblem">🍗</div>
+                    <div class="brand-text">
+                        <h1>GREEDY WHEEL</h1>
+                        <span class="sub-badge">GAME CONTROL HQ</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-metrics">
+                <div class="metric-chip">
+                    <span class="chip-dot live-dot"></span>
+                    <span class="chip-label">ENGINE:</span>
+                    <strong class="chip-val" id="engineStatusText">LIVE</strong>
+                </div>
+                <div class="metric-chip">
+                    <span class="chip-label">PLAYERS:</span>
+                    <strong class="chip-val" id="navOnlineUsers">0</strong>
+                </div>
+                <div class="metric-chip highlight-chip">
+                    <span class="chip-label">ACTIVE POOL:</span>
+                    <strong class="chip-val" id="navActivePool">🪙 0</strong>
+                </div>
+                <div class="metric-chip margin-chip">
+                    <span class="chip-label">HOUSE TARGET:</span>
+                    <strong class="chip-val text-green" id="navHouseMarginBadge">60% MARGIN</strong>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <a href="/" target="_blank" class="btn-nav btn-game-link">
+                    <span>🎮 Open Game View</span>
+                </a>
+                <button class="btn-nav btn-refresh" id="manualRefreshBtn" title="Refresh data">
+                    <span>↻ Refresh</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- App Body Layout: Sidebar + Main Content -->
+        <div class="admin-layout">
+            <!-- Left Side Navigation Drawer -->
+            <aside class="admin-sidebar" id="adminSidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-brand">
+                        <div class="brand-emblem-mini">🍗</div>
+                        <div class="sidebar-brand-text">
+                            <h3>CONTROL HQ</h3>
+                            <span>COMMAND OPTIONS</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-sidebar-close" id="btnCloseSidebar" aria-label="Close sidebar">✕</button>
+                </div>
+
+                <!-- Live Engine Quick Status Widget in Sidebar -->
+                <div class="sidebar-live-pill-card">
+                    <div class="sidebar-live-top">
+                        <span class="live-dot"></span>
+                        <span class="sl-round" id="sidebarRoundPill">Round #----</span>
+                        <span class="sl-phase phase-betting" id="sidebarPhaseBadge">BETTING</span>
+                    </div>
+                    <div class="sidebar-live-bottom">
+                        <div class="sl-stat">
+                            <span class="lbl">Timer:</span>
+                            <strong class="val" id="sidebarTimerSeconds">15s</strong>
+                        </div>
+                        <div class="sl-stat">
+                            <span class="lbl">Pool:</span>
+                            <strong class="val gold-text" id="sidebarPoolVal">🪙 0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Menu Links -->
+                <nav class="sidebar-nav">
+                    <div class="sidebar-nav-title">MAIN NAVIGATION</div>
+
+                    <button type="button" class="sidebar-nav-link active" data-view="dashboard">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">Dashboard (Home)</span>
+                        <span class="nav-tag tag-live">LIVE</span>
+                    </button>
+
+                    <button type="button" class="sidebar-nav-link" data-view="outcomes">
+                        <span class="nav-icon">🎯</span>
+                        <span class="nav-text">Outcome & Margins</span>
+                    </button>
+
+                    <button type="button" class="sidebar-nav-link" data-view="multipliers">
+                        <span class="nav-icon">⚡</span>
+                        <span class="nav-text">Multipliers Manager</span>
+                        <span class="nav-tag tag-new">AUTO</span>
+                    </button>
+
+                    <button type="button" class="sidebar-nav-link" data-view="users">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-text">Players & Wallets</span>
+                    </button>
+
+                    <button type="button" class="sidebar-nav-link" data-view="history">
+                        <span class="nav-icon">📜</span>
+                        <span class="nav-text">Rounds Audit Log</span>
+                    </button>
+
+                    <button type="button" class="sidebar-nav-link" data-view="settings">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text">Game Speed & Timings</span>
+                    </button>
+
+                    <div class="sidebar-divider"></div>
+
+                    <div class="sidebar-nav-title">VIEW MODE</div>
+
+                    <button type="button" class="sidebar-nav-link" data-view="all">
+                        <span class="nav-icon">📑</span>
+                        <span class="nav-text">View All (Full Page)</span>
+                    </button>
+                </nav>
+
+                <!-- Sidebar Quick Controls -->
+                <div class="sidebar-quick-box">
+                    <div class="sq-header">
+                        <span>⚡ QUICK ACTIONS</span>
+                    </div>
+                    <div class="sq-actions-row">
+                        <button type="button" class="btn-sq-action" id="sidebarBtnTogglePause">
+                            <span id="sidebarPauseIcon">⏸</span>
+                            <span id="sidebarPauseText">Pause</span>
+                        </button>
+                        <button type="button" class="btn-sq-action btn-sq-spin" id="sidebarBtnForceSpin">
+                            <span>⏩ Spin Now</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sidebar Footer -->
+                <div class="sidebar-footer">
+                    <div class="sidebar-db-status">
+                        <span class="db-ping-dot"></span>
+                        <span>MySQL DB Synced</span>
+                    </div>
+                    <a href="/" target="_blank" class="sidebar-client-btn">
+                        <span>🎮 Live Player Game ↗</span>
+                    </a>
+                </div>
+            </aside>
+
+            <!-- Backdrop overlay for mobile drawer -->
+            <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+            <!-- Main Dashboard Content -->
+            <main class="admin-main">
+                <!-- Row 1: Live Engine Status Hero & Quick Game Controls -->
+                <section class="dashboard-grid hero-grid" id="viewSectionHero">
+                <!-- Card 1: Live Round Countdown & Status -->
+                <div class="admin-card live-round-card">
+                    <div class="card-header">
+                        <div class="card-title-wrap">
+                            <span class="header-icon">🎡</span>
+                            <h2>Live Game Engine</h2>
+                        </div>
+                        <div class="round-id-pill" id="currentRoundPill">Round #----</div>
+                    </div>
+
+                    <div class="engine-live-display">
+                        <div class="timer-radial-wrap">
+                            <svg class="timer-radial-svg" viewBox="0 0 120 120">
+                                <circle class="timer-track" cx="60" cy="60" r="52"></circle>
+                                <circle class="timer-progress" id="timerProgressCircle" cx="60" cy="60" r="52"></circle>
+                            </svg>
+                            <div class="timer-center-info">
+                                <span class="timer-seconds" id="liveTimerSeconds">15</span>
+                                <span class="timer-label">SECONDS</span>
+                            </div>
+                        </div>
+
+                        <div class="engine-state-details">
+                            <div class="state-badge-row">
+                                <span class="engine-phase-badge phase-betting" id="livePhaseBadge">BETTING</span>
+                                <span class="pause-status-pill hidden" id="pausedIndicator">PAUSED</span>
+                            </div>
+
+                            <div class="live-stats-mini">
+                                <div class="stat-mini-item">
+                                    <span class="label">Bettors This Round</span>
+                                    <strong class="val" id="liveBettorsCount">0</strong>
+                                </div>
+                                <div class="stat-mini-item">
+                                    <span class="label">Total Round Bets</span>
+                                    <strong class="val gold-text" id="liveRoundTotalBets">🪙 0</strong>
+                                </div>
+                                <div class="stat-mini-item">
+                                    <span class="label">Current Hot Pot</span>
+                                    <strong class="val hot-text" id="liveHotItemText">HOTDOG</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Action Command Bar -->
+                    <div class="engine-actions-bar">
+                        <button class="btn-action btn-pause" id="btnTogglePause">
+                            <span class="btn-icon" id="pauseIcon">⏸</span>
+                            <span class="btn-text" id="pauseBtnText">Pause Game</span>
+                        </button>
+                        <button class="btn-action btn-spin-now" id="btnForceSpin">
+                            <span class="btn-icon">⏩</span>
+                            <span class="btn-text">Spin Wheel Now</span>
+                        </button>
+                        <button class="btn-action btn-reset-round" id="btnResetRound">
+                            <span class="btn-icon">🔄</span>
+                            <span class="btn-text">Reset Round</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2: Lifetime House Analytics & Margins -->
+                <div class="admin-card analytics-card">
+                    <div class="card-header">
+                        <div class="card-title-wrap">
+                            <span class="header-icon">📊</span>
+                            <h2>House Ledger & Margins</h2>
+                        </div>
+                        <span class="badge-tag green-tag">MySQL Live</span>
+                    </div>
+
+                    <div class="analytics-stat-grid">
+                        <div class="kpi-box">
+                            <span class="kpi-label">Total Rounds</span>
+                            <strong class="kpi-val" id="kpiTotalRounds">0</strong>
+                            <span class="kpi-sub">Completed</span>
+                        </div>
+                        <div class="kpi-box">
+                            <span class="kpi-label">Total Volume Wagered</span>
+                            <strong class="kpi-val" id="kpiTotalBets">🪙 0</strong>
+                            <span class="kpi-sub">All-time</span>
+                        </div>
+                        <div class="kpi-box">
+                            <span class="kpi-label">Total Payouts Won</span>
+                            <strong class="kpi-val" id="kpiTotalPayouts">🪙 0</strong>
+                            <span class="kpi-sub">Disbursed</span>
+                        </div>
+                        <div class="kpi-box highlight-kpi">
+                            <span class="kpi-label">House Net Revenue</span>
+                            <strong class="kpi-val text-green" id="kpiHouseProfit">🪙 0</strong>
+                            <span class="kpi-sub">House Retention</span>
+                        </div>
+                        <div class="kpi-box">
+                            <span class="kpi-label">Global Player RTP</span>
+                            <strong class="kpi-val" id="kpiRtp">0.00%</strong>
+                            <span class="kpi-sub">Target: 92-96%</span>
+                        </div>
+                        <div class="kpi-box">
+                            <span class="kpi-label">Registered Accounts</span>
+                            <strong class="kpi-val" id="kpiTotalUsers">0</strong>
+                            <span class="kpi-sub">Players</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Row 2: OUTCOME CONTROL CENTER (Manual Override & Smart House Edge) -->
+            <section class="admin-card outcome-controller-card" id="viewSectionOutcomes">
+                <div class="card-header">
+                    <div class="card-title-wrap">
+                        <span class="header-icon">🎯</span>
+                        <h2>Next Round Outcome Strategy</h2>
+                    </div>
+                    <div class="current-outcome-status" id="currentOutcomeStatusBanner">
+                        Active Strategy: <strong id="activeStrategyLabel">🎲 Weighted RNG (Auto)</strong>
+                    </div>
+                </div>
+
+                <!-- Strategy Mode Switcher Tabs -->
+                <div class="strategy-tabs-bar">
+                    <button class="strategy-tab active" data-mode="smart_margin">
+                        <span class="tab-icon">🏦</span>
+                        <div class="tab-text">
+                            <strong>Smart Target Margin (Auto)</strong>
+                            <small>Guarantees owner retains configured %</small>
+                        </div>
+                    </button>
+                    <button class="strategy-tab" data-mode="max_owner_profit">
+                        <span class="tab-icon">💎</span>
+                        <div class="tab-text">
+                            <strong>100% Owner Margin (Max Greed)</strong>
+                            <small>Lands on unbet pots (Zero user payout)</small>
+                        </div>
+                    </button>
+                    <button class="strategy-tab" data-mode="auto">
+                        <span class="tab-icon">🎲</span>
+                        <div class="tab-text">
+                            <strong>Standard RNG (Casual)</strong>
+                            <small>Natural weights with House Shield</small>
+                        </div>
+                    </button>
+                    <button class="strategy-tab" data-mode="manual">
+                        <span class="tab-icon">🎯</span>
+                        <div class="tab-text">
+                            <strong>Manual Forced Pot</strong>
+                            <small>Lock specific pot for next spin below</small>
+                        </div>
+                    </button>
+                    <button class="strategy-tab" data-mode="max_payout">
+                        <span class="tab-icon">⚡</span>
+                        <div class="tab-text">
+                            <strong>Jackpot Hype Mode</strong>
+                            <small>Picks high multiplier meat pot (10x-45x)</small>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- House Margin & Owner Profit Toolbar -->
+                <div class="margin-optimizer-box">
+                    <div class="optimizer-header">
+                        <div class="opt-title">
+                            <span class="opt-badge">OWNER PROFIT ENGINE</span>
+                            <h3>House Margin & Payout Optimizer</h3>
+                        </div>
+                        <div class="opt-live-indicator">
+                            Target Margin: <strong id="displayCurrentMarginVal">60%</strong>
+                            <span class="shield-badge shield-active" id="shieldStatusBadge">🛡️ Shield: Active</span>
+                            <span class="comm-badge" id="commStatusBadge">🪙 Cut: 5%</span>
+                        </div>
+                    </div>
+
+                    <div class="optimizer-controls-grid">
+                        <!-- Control 1: Target House Margin Presets & Slider -->
+                        <div class="opt-ctrl-col">
+                            <label class="opt-label">
+                                <span>Target House Margin (Owner Retention)</span>
+                                <small>Higher % = Less payout to users, more margin to owner</small>
+                            </label>
+                            <div class="margin-presets-row">
+                                <button type="button" class="margin-preset-btn" data-margin="30">30% (Fair)</button>
+                                <button type="button" class="margin-preset-btn" data-margin="50">50% (Medium)</button>
+                                <button type="button" class="margin-preset-btn active" data-margin="60">60% (High)</button>
+                                <button type="button" class="margin-preset-btn" data-margin="75">75% (Greedy)</button>
+                                <button type="button" class="margin-preset-btn highlight-preset" data-margin="100">100% (Zero Payout)</button>
+                            </div>
+                            <div class="slider-row">
+                                <input type="range" id="marginRangeSlider" min="0" max="100" step="5" value="60">
+                                <span class="slider-val" id="marginSliderVal">60%</span>
+                            </div>
+                        </div>
+
+                        <!-- Control 2: House Commission Cut & Loss Shield -->
+                        <div class="opt-ctrl-col">
+                            <label class="opt-label">
+                                <span>House Commission on Winnings (Tax Cut)</span>
+                                <small>Automatic % cut deducted from all player winning payouts</small>
+                            </label>
+                            <div class="comm-presets-row">
+                                <button type="button" class="comm-preset-btn" data-comm="0">0%</button>
+                                <button type="button" class="comm-preset-btn active" data-comm="5">5% Cut</button>
+                                <button type="button" class="comm-preset-btn" data-comm="10">10% Cut</button>
+                                <button type="button" class="comm-preset-btn" data-comm="15">15% Cut</button>
+                                <button type="button" class="comm-preset-btn" data-comm="20">20% Cut</button>
+                            </div>
+
+                            <div class="shield-toggle-row">
+                                <label class="shield-toggle-wrap">
+                                    <input type="checkbox" id="toggleHouseShield" checked>
+                                    <span class="toggle-slider"></span>
+                                    <span class="toggle-text">
+                                        <strong>🛡️ Zero-Loss House Shield</strong>
+                                        <small>Disqualifies any pot that causes a net loss this round</small>
+                                    </span>
+                                </label>
+                                <button type="button" class="btn-apply-margin" id="btnApplyMarginSettings">
+                                    💾 Save Margin Settings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Risk Table: All 8 Wheel Pots with Live Bets & House P/L -->
+                <div class="pot-risk-grid-title">
+                    <span>WHEEL POTS RISK & OUTCOME SELECTOR</span>
+                    <span class="sub-hint">Click "LOCK POT" on any dish to manually force next round outcome</span>
+                </div>
+
+                <div class="pots-risk-grid" id="potsRiskGrid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </section>
+
+            <!-- Row 2.5: POT MULTIPLIERS MANAGER (5x, 10x, 15x, 25x, 45x) -->
+            <section class="admin-card multipliers-manager-card" id="viewSectionMultipliers">
+                <div class="card-header">
+                    <div class="card-title-wrap">
+                        <span class="header-icon">⚡</span>
+                        <h2>Dish Payout Multipliers Manager (5x, 10x, etc.)</h2>
+                    </div>
+                    <div class="multi-header-actions">
+                        <span class="sub-hint">Change 5x, 10x, 15x, etc. Instant sync with game wheel & payouts</span>
+                    </div>
+                </div>
+
+                <!-- Quick Presets Row -->
+                <div class="multi-presets-bar">
+                    <span class="preset-label">Quick Preset:</span>
+                    <button type="button" class="btn-multi-preset" data-preset="standard">Standard (5x / 10x-45x)</button>
+                    <button type="button" class="btn-multi-preset" data-preset="low">Low Multipliers / Max Owner Margin (3x / 6x-25x)</button>
+                    <button type="button" class="btn-multi-preset" data-preset="balanced">Casino Balanced (4x / 8x-35x)</button>
+                    <button type="button" class="btn-multi-preset" data-preset="high">High Multiplier Hype (5x / 12x-50x)</button>
+                </div>
+
+                <!-- Multipliers Grid: 8 Wheel Dishes + 4 Combos -->
+                <form id="multipliersForm" class="multipliers-form">
+                    <div class="multipliers-section-title">
+                        <span>WHEEL POTS (8 DISHES)</span>
+                    </div>
+                    <div class="multipliers-grid">
+                        <div class="multi-item-input-box dish-meat">
+                            <img src="../assets/icons/hotdog.svg" alt="Hot Dog">
+                            <div class="multi-input-info">
+                                <strong>Hot Dog</strong>
+                                <small>Meat Dish</small>
+                            </div>
+                            <div class="multi-input-wrap">
+                                <input type="number" id="multi_hotdog" data-id="hotdog" step="0.1" min="1" max="500" value="10">
+                                <span class="multi-x">X</span>
+                            </div>
+                        </div>
+
+                        <div class="multi-item-input-box dish-meat">
+                            <img src="../assets/icons/kebab.svg" alt="Kebab">
+                            <div class="multi-input-info">
+                                <strong>Kebab Skewer</strong>
+                                <small>Meat Dish</small>
+                            </div>
+                            <div class="multi-input-wrap">
+                                <input type="number" id="multi_kebab" data-id="kebab" step="0.1" min="1" max="500" value="15">
+                                <span class="multi-x">X</span>
+                            </div>
+                        </div>
+
+                        <div class="multi-item-input-box dish-meat">
+                            <img src="../assets/icons/chicken.svg" alt="Chicken">
+                            <div class="multi-input-info">
+                                <strong>Roast Chicken</strong>
+                                <small>Meat Dish</small>
+                            </div>
+                            <div class="multi-input-wrap">
+                                <input type="number" id="multi_chicken" data-id="chicken" step="0.1" min="1" max="500" value="25">
+                                <span class="multi-x">X</span>
+                            </div>
+                        </div>
+
+                        <div class="multi-item-input-box dish-meat">
+                            <img src="../assets/icons/steak.svg" alt="Steak">
+                            <div class="multi-input-info">
+                                <strong>Beef Steak</strong>
+                                <small>Meat Dish</small>
+                            </div>
+                            <div class="multi-input-wrap">
+                                <input type="number" id="multi_steak" data-id="steak" step="0.1" min="1" max="500" value="45">
+                                <span class="multi-x">X</span>
+                            </div>
+                        </div>
+
+                        <div class="multi-item-input-box dish-veg">
+                            <img src="../assets/icons/tomato.svg" alt="Tomato">
+                            <div class="multi-input-info">
+                                <strong>Tomato</strong>
+                                <small>Veggie Dish</small>
+                            </div>
+                            <div class="multi-input-wrap">
+                                <input type="number" id="multi_tomato" data-id="tomato" step="0.1" min="1" max="500" value="5">
+                                <span class="multi-x">X</span>
+                            </div>
+                        </div>
+
+                        <div class="multi-item-input-box dish-veg">
+                            <img src="../assets/icons/corn.svg" alt="Corn">
+                            <div class="multi-input-info">
+                                <strong>Sweet Corn</strong>
+                                <small>Veggie Dish</small>
+                            </div>
+                            <div class="multi-input-wrap">
+                                <input type="number" id="multi_corn" data-id="corn" step="0.1" min="1" max="500" value="5">
+                                <span class="multi-x">X</span>
+                            </div>
+                        </div>
+
+                        <div class="multi-item-input-box dish-veg">
+                            <img src="../assets/icons/cabbage.svg" alt="Cabbage">
+                            <div class="multi-input-info">
+                                <strong>Cabbage</strong>
+                                <small>Veggie Dish</small>
+                            </div>
+                            <div class="multi-input-wrap">
+                                <input type="number" id="multi_cabbage" data-id="cabbage" step="0.1" min="1" max="500" value="5">
+                                <span class="multi-x">X</span>
+                            </div>
+                        </div>
+
+                        <div class="multi-item-input-box dish-veg">
+                            <img src="../assets/icons/carrot.svg" alt="Carrot">
+                            <div class="multi-input-info">
+                                <strong>Carrot</strong>
+                                <small>Veggie Dish</small>
+                            </div>
+                            <div class="multi-input-wrap">
+                                <input type="number" id="multi_carrot" data-id="carrot" step="0.1" min="1" max="500" value="5">
+                                <span class="multi-x">X</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="multipliers-section-title auto-calc-header-row" style="margin-top: 18px;">
+                        <div class="title-with-badge">
+                            <span>LOWER COMBO BASKETS (4 DISHES)</span>
+                            <span class="badge-auto-calc" id="autoCalcStatusBadge">⚡ AUTO-CALCULATED FROM WHEEL POTS</span>
+                        </div>
+                        <label class="auto-calc-checkbox-label">
+                            <input type="checkbox" id="toggleAutoCalcCombos" checked>
+                            <span>Auto-Sync with Pots</span>
+                        </label>
+                    </div>
+                    <div class="multipliers-grid combos-grid">
+                        <div class="multi-item-input-box dish-veg">
+                            <img src="../assets/icons/veg_basket.svg" alt="Veg Basket">
+                            <div class="multi-input-info">
+                                <strong>Veg Basket</strong>
+                                <small>4 Veggies</small>
+                                <span class="formula-hint">Auto = Avg(Veggies) / 4</span>
+                            </div>
+                            <div class="multi-input-wrap">
+                                <input type="number" id="multi_veg_combo" data-id="veg_combo" step="0.01" min="0.1" max="50" value="1.25">
+                                <span class="multi-x">X</span>
+                            </div>
+                        </div>
+
+                        <div class="multi-item-input-box dish-veg">
+                            <img src="../assets/icons/salad.svg" alt="Salad">
+                            <div class="multi-input-info">
+                                <strong>Salad Bowl</strong>
+                                <small>4 Veggies</small>
+                                <span class="formula-hint">Auto = Avg(Veggies) × 0.40</span>
+                            </div>
+                            <div class="multi-input-wrap">
+                                <input type="number" id="multi_salad" data-id="salad" step="0.01" min="0.1" max="50" value="2">
+                                <span class="multi-x">X</span>
+                            </div>
+                        </div>
+
+                        <div class="multi-item-input-box dish-meat">
+                            <img src="../assets/icons/pizza.svg" alt="Pizza">
+                            <div class="multi-input-info">
+                                <strong>Pizza Platter</strong>
+                                <small>4 Meats</small>
+                                <span class="formula-hint">Auto = Hot Dog / 4</span>
+                            </div>
+                            <div class="multi-input-wrap">
+                                <input type="number" id="multi_pizza" data-id="pizza" step="0.01" min="0.1" max="50" value="2.5">
+                                <span class="multi-x">X</span>
+                            </div>
+                        </div>
+
+                        <div class="multi-item-input-box dish-meat">
+                            <img src="../assets/icons/meat_basket.svg" alt="Meat Basket">
+                            <div class="multi-input-info">
+                                <strong>Meat Basket</strong>
+                                <small>4 Meats</small>
+                                <span class="formula-hint">Auto = Avg(Meats) × 0.184</span>
+                            </div>
+                            <div class="multi-input-wrap">
+                                <input type="number" id="multi_meat_combo" data-id="meat_combo" step="0.01" min="0.1" max="50" value="4.37">
+                                <span class="multi-x">X</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="multipliers-footer">
+                        <button type="submit" class="btn-save-multipliers" id="btnSaveMultipliers">
+                            💾 Save & Broadcast Multipliers to Live Game
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Row 3: User Management & Real-time Wallet Control -->
+            <section class="admin-card users-management-card" id="viewSectionUsers">
+                <div class="card-header">
+                    <div class="card-title-wrap">
+                        <span class="header-icon">👥</span>
+                        <h2>Player Wallets & Account Controls</h2>
+                    </div>
+                    <div class="user-search-wrap">
+                        <input type="text" id="userSearchInput" placeholder="Search by username or user ID...">
+                        <button class="btn-search" id="btnUserSearch">🔍 Search</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Player</th>
+                                <th>Coin Balance</th>
+                                <th>Diamonds</th>
+                                <th>Today Profit</th>
+                                <th>All-Time Profit</th>
+                                <th>Registered</th>
+                                <th style="text-align: right;">Wallet Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="8" style="text-align: center; padding: 24px; color: #9E9E9E;">Loading users...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Row 4: Game Timing Settings & Recent Rounds Audit -->
+            <div class="dashboard-grid lower-grid" id="viewSectionLowerGrid">
+                <!-- Settings: Phase Durations -->
+                <div class="admin-card settings-card" id="viewSectionTimings">
+                    <div class="card-header">
+                        <div class="card-title-wrap">
+                            <span class="header-icon">⚙️</span>
+                            <h2>Phase Durations & Speed</h2>
+                        </div>
+                    </div>
+
+                    <form id="timingConfigForm" class="config-form">
+                        <div class="form-group">
+                            <label for="inputBettingTime">
+                                <span>Betting Phase Duration</span>
+                                <small>Time players have to place bets</small>
+                            </label>
+                            <div class="input-unit-wrap">
+                                <input type="number" id="inputBettingTime" min="5" max="60" value="15">
+                                <span class="unit">sec</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputSpinTime">
+                                <span>Wheel Spin Deceleration</span>
+                                <small>Duration of wheel rotation</small>
+                            </label>
+                            <div class="input-unit-wrap">
+                                <input type="number" id="inputSpinTime" min="4" max="20" value="8">
+                                <span class="unit">sec</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputResultTime">
+                                <span>Result & Podium Screen</span>
+                                <small>Celebration screen duration</small>
+                            </label>
+                            <div class="input-unit-wrap">
+                                <input type="number" id="inputResultTime" min="3" max="15" value="5">
+                                <span class="unit">sec</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-save-settings">
+                            💾 Save Timings Configuration
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Recent Rounds Audit Table -->
+                <div class="admin-card rounds-history-card" id="viewSectionHistory">
+                    <div class="card-header">
+                        <div class="card-title-wrap">
+                            <span class="header-icon">📜</span>
+                            <h2>Recent Rounds Audit Log</h2>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="admin-table mini-table" id="recentRoundsTable">
+                            <thead>
+                                <tr>
+                                    <th>Round</th>
+                                    <th>Winning Pot</th>
+                                    <th>Room Pool</th>
+                                    <th>Disbursed</th>
+                                    <th>House P/L</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentRoundsBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 18px; color: #9E9E9E;">Loading rounds history...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+        <!-- Wallet Adjustment Modal -->
+        <div class="modal-overlay" id="walletAdjustModal">
+            <div class="modal-backdrop"></div>
+            <div class="modal-card">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <span>🪙 Adjust Player Balance: <strong id="modalTargetUser">User</strong></span>
+                    </div>
+                    <button class="modal-close-btn" id="closeAdjustModalBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-current-balance-box">
+                        <div class="bal-item">
+                            <span>Coins:</span>
+                            <strong id="modalUserCoins">0</strong>
+                        </div>
+                        <div class="bal-item">
+                            <span>Diamonds:</span>
+                            <strong id="modalUserDiamonds">0</strong>
+                        </div>
+                    </div>
+
+                    <div class="modal-form-group">
+                        <label>Currency Type</label>
+                        <div class="currency-toggle-group">
+                            <button class="currency-toggle-btn active" data-currency="coins">🪙 Coins</button>
+                            <button class="currency-toggle-btn" data-currency="diamonds">💎 Diamonds</button>
+                        </div>
+                    </div>
+
+                    <div class="modal-form-group">
+                        <label>Adjustment Action</label>
+                        <div class="action-toggle-group">
+                            <button class="action-toggle-btn active" data-action="credit">➕ Credit (Add)</button>
+                            <button class="action-toggle-btn" data-action="debit">➖ Debit (Remove)</button>
+                            <button class="action-toggle-btn" data-action="set">🎯 Set Exact Balance</button>
+                        </div>
+                    </div>
+
+                    <div class="modal-form-group">
+                        <label>Amount</label>
+                        <input type="number" id="adjustAmountInput" placeholder="e.g. 50000" min="1">
+                        <div class="quick-chips-row">
+                            <button type="button" class="quick-chip-btn" data-val="10000">+10K</button>
+                            <button type="button" class="quick-chip-btn" data-val="50000">+50K</button>
+                            <button type="button" class="quick-chip-btn" data-val="100000">+100K</button>
+                            <button type="button" class="quick-chip-btn" data-val="1000000">+1M</button>
+                            <button type="button" class="quick-chip-btn" data-val="10000000">+10M</button>
+                        </div>
+                    </div>
+
+                    <button class="btn-execute-adjust" id="btnSubmitAdjustment">
+                        Confirm Balance Update
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div id="adminToastContainer" class="toast-container"></div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

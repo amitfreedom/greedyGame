@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <radialGradient id="platterG" cx="50%" cy="50%" r="50%">
+      <stop offset="60%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#CFD8DC" />
+    </radialGradient>
+  </defs>
+  <!-- Platter Dish -->
+  <ellipse cx="50" cy="56" rx="42" ry="16" fill="url(#platterG)" stroke="#78909C" stroke-width="2.5" />
+  
+  <!-- Roast Chicken Drumstick on left -->
+  <path d="M26 44 C22 34 32 26 44 32 C50 36 52 46 48 52 C40 56 30 52 26 44 Z" fill="#FB8C00" stroke="#E65100" stroke-width="2" />
+  <circle cx="20" cy="54" r="3.5" fill="#FFFFFF" stroke="#B0BEC5" stroke-width="1.2" />
+  
+  <!-- Red Sausage in center -->
+  <rect x="36" y="38" width="34" height="12" rx="6" fill="#E53935" stroke="#B71C1C" stroke-width="2" transform="rotate(-15 53 44)" />
+  <path d="M42 42 Q46 38 50 42 Q54 46 58 42" fill="none" stroke="#FFD600" stroke-width="2" stroke-linecap="round" />
+  
+  <!-- Ribs / Steak Slice on right -->
+  <ellipse cx="64" cy="46" rx="14" ry="10" fill="#C62828" stroke="#880E4F" stroke-width="2" />
+  <line x1="56" y1="44" x2="68" y2="44" stroke="#FFCDD2" stroke-width="2" stroke-linecap="round" />
+  <line x1="60" y1="48" x2="70" y2="48" stroke="#FFCDD2" stroke-width="2" stroke-linecap="round" />
+</svg>

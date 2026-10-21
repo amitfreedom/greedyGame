@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Greedy - Real-time Multiplayer Wheel Game</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Mobile Device Container -->
+    <div class="mobile-frame">
+        
+        <!-- BottomSheet Top Drag Handle (Active in BottomSheet modes) -->
+        <div class="bottomsheet-drag-handle-bar" id="sheetDragHandle" style="display: none;" title="Pull down to close">
+            <div class="drag-pill"></div>
+        </div>
+
+        <!-- Drifting Cartoon Clouds in Sky -->
+        <div class="sky-clouds">
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+        </div>
+
+        <!-- ==================== LUXURY CARNIVAL SPLASH SCREEN ==================== -->
+        <div class="game-splash-screen" id="gameSplashScreen">
+            <!-- Rotating Sunburst Ray Beams -->
+            <div class="splash-sunburst-rays"></div>
+
+            <!-- Sparkling Golden Star Particles -->
+            <div class="splash-stars-layer">
+                <span class="star-particle s1">✦</span>
+                <span class="star-particle s2">★</span>
+                <span class="star-particle s3">✦</span>
+                <span class="star-particle s4">★</span>
+                <span class="star-particle s5">✦</span>
+                <span class="star-particle s6">★</span>
+                <span class="star-particle s7">✦</span>
+                <span class="star-particle s8">★</span>
+            </div>
+
+            <!-- Floating 3D Food Treats -->
+            <div class="splash-floating-food food-hotdog">
+                <img src="assets/icons/hotdog.svg" alt="Hot Dog">
+            </div>
+            <div class="splash-floating-food food-pizza">
+                <img src="assets/icons/pizza.svg" alt="Pizza">
+            </div>
+            <div class="splash-floating-food food-chicken">
+                <img src="assets/icons/chicken.svg" alt="Chicken">
+            </div>
+            <div class="splash-floating-food food-steak">
+                <img src="assets/icons/steak.svg" alt="Steak">
+            </div>
+
+            <!-- Top Brand Tag -->
+            <div class="splash-brand-top">
+                <span class="brand-crown">👑</span>
+                <span class="brand-name">ARCADE CARNIVAL</span>
+                <span class="brand-crown">👑</span>
+            </div>
+
+            <!-- Center Content: Mascot / Ferris Wheel Badge & 3D Title -->
+            <div class="splash-center-content">
+                <!-- Center Glowing Carnival Wheel Emblem -->
+                <div class="splash-wheel-emblem">
+                    <div class="emblem-bulb-glow"></div>
+                    <div class="emblem-wheel-ring">
+                        <span class="emblem-bulb b1"></span>
+                        <span class="emblem-bulb b2"></span>
+                        <span class="emblem-bulb b3"></span>
+                        <span class="emblem-bulb b4"></span>
+                        <span class="emblem-bulb b5"></span>
+                        <span class="emblem-bulb b6"></span>
+                        <span class="emblem-bulb b7"></span>
+                        <span class="emblem-bulb b8"></span>
+                        <img src="assets/icons/salad.svg" class="emblem-center-food" alt="Dish">
+                    </div>
+                </div>
+
+                <!-- 3D Layered Cartoon Game Title -->
+                <div class="splash-game-title">
+                    <div class="title-3d-text">GREEDY</div>
+                    <div class="title-sub-ribbon">
+                        <span class="ribbon-tail left"></span>
+                        <span class="ribbon-content">🍗 CARNIVAL FEAST 🍕</span>
+                        <span class="ribbon-tail right"></span>
+                    </div>
+                </div>
+
+                <div class="splash-tagline">Real-time Multiplayer Arcade</div>
+            </div>
+
+            <!-- Bottom Section: Status, Horizontal Progress Bar, & Footer -->
+            <div class="splash-loading-section">
+                <!-- Status Row with Left Label and Right Percentage Pill -->
+                <div class="loading-status-row">
+                    <div class="status-left-wrap">
+                        <span class="loading-spin-icon">🎡</span>
+                        <span class="loading-status-text" id="splashStatusText">Entering Carnival Arena...</span>
+                    </div>
+                    <div class="loading-percent-badge" id="splashPercentText">0%</div>
+                </div>
+
+                <!-- Custom Horizontal Progress Bar with Moving Golden Coin Pin -->
+                <div class="horizontal-progress-bar-wrap">
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill" id="splashProgressBarFill" style="width: 0%;">
+                            <div class="progress-light-sheen"></div>
+                            <!-- Moving Gold Coin Pin at Progress Head -->
+                            <div class="progress-head-coin">
+                                <img src="assets/icons/coin.svg" alt="Coin">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quality & Safety Tag -->
+                <div class="splash-footer-note">
+                    <span>Fair Play</span> • <span>Live Multiplayer</span> • <span>Instant Payout</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-wrapper">
+            
+            <!-- Top Header & Navigation Bar (Matching Media 1 to 5) -->
+            <header class="game-header">
+                <div class="header-left">
+                    <button class="nav-icon-btn" id="homeBtn" title="Close Game / Home">
+                        <svg viewBox="0 0 24 24" class="svg-nav-icon"><path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                    </button>
+                    <!-- User Profile Chip for Mobile BottomSheet -->
+                    <div class="user-profile-header-chip" id="userHeaderChip" title="User Profile">
+                        <img src="assets/avatars/avatar1.svg" class="header-user-avatar" id="headerUserAvatar" alt="Avatar" onerror="this.src='assets/avatars/avatar1.svg'">
+                        <span class="header-username" id="headerUsernameText">Player</span>
+                    </div>
+                    <div class="round-number-tag" id="roundNumberText">Round:730</div>
+                </div>
+
+                <div class="header-right">
+                    <!-- Diamonds Counter Pill Badge -->
+                    <div class="diamond-pill-badge" id="headerDiamondBadge" title="Your Diamonds">
+                        <img src="assets/icons/diamond.svg" class="diamond-mini-icon" alt="Diamonds">
+                        <span id="userDiamondsText">0</span>
+                    </div>
+                    <!-- Trophy: Opens Today's Revenue Rank -->
+                    <button class="nav-icon-btn trophy-btn" id="trophyBtn" title="Revenue Ranking">
+                        <img src="assets/icons/diamond.svg" class="trophy-nav-icon" alt="Trophy">
+                    </button>
+                    <!-- Settings Button & Volume Seekbar Dropdown -->
+                    <div class="settings-dropdown-wrapper">
+                        <button class="nav-icon-btn" id="soundBtn" title="Sound Settings">
+                            <svg viewBox="0 0 24 24" class="svg-nav-icon"><path fill="currentColor" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                        </button>
+
+                        <!-- Sound Settings Dropdown Popup -->
+                        <div class="sound-settings-dropdown" id="soundSettingsDropdown">
+                            <div class="dropdown-arrow-up"></div>
+                            <div class="settings-dropdown-header">
+                                <span class="dropdown-title">Sound Settings</span>
+                                <button class="dropdown-close-mini" id="closeSettingsDropdownBtn">&times;</button>
+                            </div>
+
+                            <div class="settings-control-row">
+                                <div class="slider-label-group">
+                                    <span class="ctrl-icon" id="soundMuteIcon">🔊</span>
+                                    <span class="ctrl-name">Volume</span>
+                                    <span class="volume-val-badge" id="volumePercentText">80%</span>
+                                </div>
+                                <div class="seekbar-track-wrap">
+                                    <span class="seekbar-vol-min">🔈</span>
+                                    <input type="range" min="0" max="100" value="80" class="game-volume-seekbar" id="volumeSeekbar">
+                                    <span class="seekbar-vol-max">🔊</span>
+                                </div>
+                            </div>
+
+                            <div class="settings-toggles-row">
+                                <button class="settings-action-pill" id="muteToggleBtn">
+                                    <span id="muteBtnIcon">🔇</span>
+                                    <span id="muteBtnLabel">Mute</span>
+                                </button>
+                                <button class="settings-action-pill preset-pill" data-vol="100">Max</button>
+                                <button class="settings-action-pill preset-pill" data-vol="50">50%</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Help / Rules -->
+                    <button class="nav-icon-btn" id="rulesBtn" title="Rules">
+                        <span class="question-mark">?</span>
+                    </button>
+                    <!-- Ping Indicator -->
+                    <div class="ping-badge" id="pingBadge">
+                        <span class="wifi-icon">📶</span>
+                        <span id="pingValueText">229ms</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Ferris Wheel Stage Container (Flex 1 Centered & Auto-Scaled) -->
+            <div class="wheel-stage-wrapper" id="wheelStageWrapper">
+                <section class="wheel-stage">
+                
+                <!-- Ferris Wheel A-frame Support Stand (Behind Wheel) -->
+                <div class="ferris-support">
+                    <img src="assets/icons/greedy_stand.svg" class="stand-vector-img" alt="Greedy Stand Base">
+                </div>
+
+                <!-- Spokes radiating from center -->
+                <div class="wheel-spokes">
+                    <div class="spoke spoke-0"></div>
+                    <div class="spoke spoke-1"></div>
+                    <div class="spoke spoke-2"></div>
+                    <div class="spoke spoke-3"></div>
+                </div>
+
+                <!-- Center Hub (Bulb Rim & Status/Timer) -->
+                <div class="center-hub-wrapper">
+                    <div class="bulb-rim">
+                        <span class="bulb b1"></span>
+                        <span class="bulb b2"></span>
+                        <span class="bulb b3"></span>
+                        <span class="bulb b4"></span>
+                        <span class="bulb b5"></span>
+                        <span class="bulb b6"></span>
+                        <span class="bulb b7"></span>
+                        <span class="bulb b8"></span>
+                        <span class="bulb b9"></span>
+                        <span class="bulb b10"></span>
+                        <span class="bulb b11"></span>
+                        <span class="bulb b12"></span>
+                    </div>
+                    <div class="wheel-center" id="wheelCenter">
+                        <!-- Betting Phase Display (Matching Media 2 & 5) -->
+                        <div class="hub-betting">
+                            <div class="hub-food-banner">
+                                <img src="assets/icons/salad.svg" class="hub-plate-icon" alt="Plate">
+                            </div>
+                            <div class="hub-select-time">Select Time</div>
+                            <div class="hub-countdown-sec">12s</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8 Radial Food Pods with Horizontal Split (Matching Media 2 & 3) -->
+                <div class="pods-container">
+                    
+                    <!-- Pod 0: Hot Dog (12:00, 10X) -->
+                    <div class="wheel-pod pod-0" data-id="hotdog" data-idx="0">
+                        <span class="hot-badge" id="hotBadgeHotdog">HOT</span>
+                        <div class="pod-inner-split">
+                            <div class="pod-top-half">
+                                <img src="assets/icons/hotdog.svg" class="pod-icon" alt="Hot Dog">
+                                <span class="pod-multi-text">10X</span>
+                            </div>
+                            <div class="pod-bottom-half">
+                                <span class="pod-total-text" id="podTotal_hotdog">Total:0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pod 1: Kebab (1:30, 15X) -->
+                    <div class="wheel-pod pod-1" data-id="kebab" data-idx="1">
+                        <div class="pod-inner-split">
+                            <div class="pod-top-half">
+                                <img src="assets/icons/kebab.svg" class="pod-icon" alt="Kebab">
+                                <span class="pod-multi-text">15X</span>
+                            </div>
+                            <div class="pod-bottom-half">
+                                <span class="pod-total-text" id="podTotal_kebab">Total:0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pod 2: Chicken (3:00, 25X) -->
+                    <div class="wheel-pod pod-2" data-id="chicken" data-idx="2">
+                        <div class="pod-inner-split">
+                            <div class="pod-top-half">
+                                <img src="assets/icons/chicken.svg" class="pod-icon" alt="Roast Chicken">
+                                <span class="pod-multi-text">25X</span>
+                            </div>
+                            <div class="pod-bottom-half">
+                                <span class="pod-total-text" id="podTotal_chicken">Total:0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pod 3: Steak (4:30, 45X) -->
+                    <div class="wheel-pod pod-3" data-id="steak" data-idx="3">
+                        <div class="pod-inner-split">
+                            <div class="pod-top-half">
+                                <img src="assets/icons/steak.svg" class="pod-icon" alt="Steak">
+                                <span class="pod-multi-text">45X</span>
+                            </div>
+                            <div class="pod-bottom-half">
+                                <span class="pod-total-text" id="podTotal_steak">Total:0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pod 4: Tomato (6:00, 5X - Matching Media 2 & 3) -->
+                    <div class="wheel-pod pod-4" data-id="tomato" data-idx="4">
+                        <div class="pod-inner-split">
+                            <div class="pod-top-half">
+                                <img src="assets/icons/tomato.svg" class="pod-icon" alt="Tomato">
+                                <span class="pod-multi-text">5X</span>
+                            </div>
+                            <div class="pod-bottom-half">
+                                <span class="pod-total-text" id="podTotal_tomato">Total:0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pod 5: Corn (7:30, 5X) -->
+                    <div class="wheel-pod pod-5" data-id="corn" data-idx="5">
+                        <div class="pod-inner-split">
+                            <div class="pod-top-half">
+                                <img src="assets/icons/corn.svg" class="pod-icon" alt="Corn">
+                                <span class="pod-multi-text">5X</span>
+                            </div>
+                            <div class="pod-bottom-half">
+                                <span class="pod-total-text" id="podTotal_corn">Total:0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pod 6: Cabbage (9:00, 5X) -->
+                    <div class="wheel-pod pod-6" data-id="cabbage" data-idx="6">
+                        <div class="pod-inner-split">
+                            <div class="pod-top-half">
+                                <img src="assets/icons/cabbage.svg" class="pod-icon" alt="Cabbage">
+                                <span class="pod-multi-text">5X</span>
+                            </div>
+                            <div class="pod-bottom-half">
+                                <span class="pod-total-text" id="podTotal_cabbage">Total:0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pod 7: Carrot (10:30, 5X) -->
+                    <div class="wheel-pod pod-7" data-id="carrot" data-idx="7">
+                        <div class="pod-inner-split">
+                            <div class="pod-top-half">
+                                <img src="assets/icons/carrot.svg" class="pod-icon" alt="Carrot">
+                                <span class="pod-multi-text">5X</span>
+                            </div>
+                            <div class="pod-bottom-half">
+                                <span class="pod-total-text" id="podTotal_carrot">Total:0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 4 Lower Base Combo Dishes (Matching Media 2, 3, 5) -->
+                <div class="wheel-base-actions">
+                    <!-- 1. Veg Combo Basket (1.25x) -->
+                    <button class="combo-dish-btn veg-combo-btn" id="vegComboBtn" data-id="veg_combo">
+                        <div class="floating-dish-total" id="podTotal_veg_combo">Total:0</div>
+                        <div class="combo-icon-circle">
+                            <img src="assets/icons/veg_basket.svg" alt="Veg Basket">
+                        </div>
+                        <span class="combo-badge-tag">1.25x</span>
+                    </button>
+
+                    <!-- 2. Salad Bowl (Salad) -->
+                    <button class="combo-dish-btn salad-dish-btn" id="saladComboBtn" data-id="salad">
+                        <div class="floating-dish-total" id="podTotal_salad">Total:0</div>
+                        <div class="combo-icon-circle">
+                            <img src="assets/icons/salad.svg" alt="Salad">
+                        </div>
+                        <span class="combo-badge-tag yellow-tag">Salad</span>
+                    </button>
+
+                    <!-- 3. Pizza Platter (Pizza) -->
+                    <button class="combo-dish-btn pizza-dish-btn" id="pizzaComboBtn" data-id="pizza">
+                        <div class="floating-dish-total" id="podTotal_pizza">Total:0</div>
+                        <div class="combo-icon-circle">
+                            <img src="assets/icons/pizza.svg" alt="Pizza">
+                        </div>
+                        <span class="combo-badge-tag yellow-tag">Pizza</span>
+                    </button>
+
+                    <!-- 4. Meat Combo Platter (4.37x) -->
+                    <button class="combo-dish-btn meat-combo-btn" id="meatComboBtn" data-id="meat_combo">
+                        <div class="floating-dish-total" id="podTotal_meat_combo">Total:0</div>
+                        <div class="combo-icon-circle">
+                            <img src="assets/icons/meat_basket.svg" alt="Meat Basket">
+                        </div>
+                        <span class="combo-badge-tag">4.37x</span>
+                    </button>
+                </div>
+
+            </section>
+            </div>
+
+            <!-- Live Winning Ticker Marquee Bar -->
+            <div class="room-live-ticker-bar" id="roomLiveTicker">
+                <span class="ticker-speaker-icon">📢</span>
+                <div class="ticker-scroll-track">
+                    <span class="ticker-message" id="tickerText">🎡 Welcome to Greedy! Place your bets and spin to win! 🎡</span>
+                </div>
+            </div>
+
+            <!-- Bottom Docked Game Console (Unified Machine View) -->
+            <div class="bottom-docked-console">
+
+                <!-- 1. Wager Chips Console with 5 Chips (500, 1K, 5K, 10K, 50K - Matching Media 2 & 5) -->
+                <section class="wager-chips-console">
+                    <div class="chips-flex-row">
+                        <!-- Chip 500 -->
+                        <button class="chip-card-btn chip-500 active" data-val="500">
+                            <div class="chip-coin coin-red">
+                                <span>500</span>
+                            </div>
+                        </button>
+
+                        <!-- Chip 1K -->
+                        <button class="chip-card-btn chip-1k" data-val="1000">
+                            <div class="chip-coin coin-gold">
+                                <span>1K</span>
+                            </div>
+                        </button>
+
+                        <!-- Chip 5K -->
+                        <button class="chip-card-btn chip-5k" data-val="5000">
+                            <div class="chip-coin coin-gold">
+                                <span>5K</span>
+                            </div>
+                        </button>
+
+                        <!-- Chip 10K -->
+                        <button class="chip-card-btn chip-10k" data-val="10000">
+                            <div class="chip-coin coin-gold">
+                                <span>10K</span>
+                            </div>
+                        </button>
+
+                        <!-- Chip 50K -->
+                        <button class="chip-card-btn chip-50k" data-val="50000">
+                            <div class="chip-coin coin-gold">
+                                <span>50K</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Popular Recommendation Yellow Banner (Matching Media 2 & 5) -->
+                    <div class="recommendation-bar-row">
+                        <div class="recom-stat-box left-box">
+                            <div class="stat-lbl">Total</div>
+                            <div class="stat-num" id="totalRoomBetsText">0</div>
+                        </div>
+
+                        <button class="recom-banner-center" id="popularRecomBtn">
+                            <div class="recom-badge-title">Popular Recommendation</div>
+                            <div class="recom-action-text">Set up package and bet here &gt;</div>
+                        </button>
+
+                        <div class="recom-stat-box right-box">
+                            <div class="stat-lbl">Mine</div>
+                            <div class="stat-num" id="myTotalBetText">0</div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- 2. Player Wallet & Status Bar (Red Dashboard - Matching Media 2 & 5) -->
+                <section class="wallet-bar-section">
+                    <!-- Red Square Options / Recharge Button -->
+                    <button class="wallet-square-btn" id="rechargeModalBtn" title="Recharge / Free Coins">
+                        <img src="assets/icons/refresh.svg" alt="Recharge">
+                    </button>
+
+                    <!-- Balance Pill -->
+                    <div class="wallet-pill-container" id="balancePill">
+                        <span class="pill-dot left-dot"></span>
+                        <div class="pill-text-content">
+                            <div class="pill-label">Balance</div>
+                            <div class="pill-amount-val">
+                                <img src="assets/icons/coin.svg" class="egg-coin-icon" alt="Coins">
+                                <span id="userCoinsText">6132339</span>
+                            </div>
+                        </div>
+                        <span class="pill-dot right-dot"></span>
+                    </div>
+
+                    <!-- Today's Profits Pill -->
+                    <div class="wallet-pill-container" id="profitPill">
+                        <span class="pill-dot left-dot"></span>
+                        <div class="pill-text-content">
+                            <div class="pill-label">Today's profits</div>
+                            <div class="pill-amount-val">
+                                <img src="assets/icons/coin.svg" class="egg-coin-icon" alt="Coins">
+                                <span id="userProfitsText">0</span>
+                            </div>
+                        </div>
+                        <span class="pill-dot right-dot"></span>
+                    </div>
+
+                    <!-- Repeat Button (Matching Media 2 & 5) -->
+                    <button class="repeat-action-btn" id="repeatBetBtn" title="Repeat previous bet">
+                        Repeat
+                    </button>
+                </section>
+
+                <!-- 3. Results History Ribbon (Matching Media 2 & 5) -->
+                <section class="results-ribbon-section">
+                    <div class="result-word-label">result</div>
+                    <div class="results-horizontal-scroll" id="resultsRow">
+                        <!-- Populated dynamically -->
+                    </div>
+                </section>
+
+                <!-- 4. Big Winner Bottom Bar (Matching Media 2, 4, 5) -->
+                <footer class="big-winner-footer" id="bigWinnerBar">
+                    <div class="winner-label-part">
+                        <span class="big-winner-title">Big Winner</span>
+                        <span class="vertical-divider">|</span>
+                        <span class="winner-crown">👑 1</span>
+                    </div>
+
+                    <div class="winner-user-part">
+                        <img src="assets/avatars/avatar_king.svg" class="winner-avatar" id="bigWinnerAvatar" alt="Winner">
+                        <span class="winner-username" id="bigWinnerName">✪R.AGENC...</span>
+                    </div>
+
+                    <div class="winner-score-part">
+                        <img src="assets/icons/coin.svg" class="winner-coin-icon" alt="Coins">
+                        <span id="bigWinnerAmount">34.92M</span>
+                        <span class="chevron-arrow">&gt;</span>
+                    </div>
+                </footer>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- 1. End of Round Results & Podium Modal (Matching Media 1) -->
+    <div class="modal-overlay" id="roundResultModal">
+        <div class="modal-backdrop"></div>
+        <div class="round-podium-card">
+            
+            <!-- Confetti & Fork / Knife Decor -->
+            <div class="podium-decorations">
+                <span class="confetti-streamer c-left">🎊</span>
+                <span class="confetti-streamer c-right">🎉</span>
+                <div class="cutlery-icon fork-icon">🍴</div>
+            </div>
+
+            <!-- Header Winning Platter -->
+            <div class="podium-hero-dish">
+                <img src="assets/icons/salad.svg" id="podiumDishImg" class="hero-dish-img" alt="Winning Dish">
+            </div>
+
+            <!-- Top Right Countdown Timer -->
+            <div class="podium-top-timer" id="podiumCountdown">4s</div>
+
+            <!-- Round Result Text -->
+            <div class="round-outcome-title">
+                Round <span class="highlight-red" id="podiumRoundNum">0729's</span> Result: 
+                <img src="assets/icons/salad.svg" id="podiumMiniWinner" class="mini-result-icon">
+                <img src="assets/icons/veg_basket.svg" class="mini-result-icon">
+            </div>
+
+            <!-- This Round Stats -->
+            <div class="round-stat-row">
+                <span class="stat-title">This Round Earnings:</span>
+                <span class="stat-value">
+                    <img src="assets/icons/coin.svg" class="mini-coin-egg">
+                    <span id="podiumEarnings">0</span>
+                </span>
+            </div>
+
+            <div class="round-stat-row">
+                <span class="stat-title">This Round Bets:</span>
+                <span class="stat-value">
+                    <img src="assets/icons/coin.svg" class="mini-coin-egg">
+                    <span id="podiumBets">0</span>
+                </span>
+            </div>
+
+            <!-- Ranking Subtitle -->
+            <div class="podium-ranking-header">
+                <span class="ribbon-decor">〰️</span>
+                <span>This Round Ranking:</span>
+                <span class="glow-orb"></span>
+            </div>
+
+            <!-- Top 3 Winners Podium (Matching Media 1) -->
+            <div class="podium-winners-row" id="roundPodiumWinners">
+                <!-- Rank 1 (Center) -->
+                <div class="podium-winner-col rank-1-col">
+                    <div class="avatar-crown-wrap">
+                        <img src="assets/avatars/avatar_queen.svg" class="podium-avatar">
+                        <span class="rank-tag rank-1-tag">1</span>
+                    </div>
+                    <div class="podium-user-name">Tuyền Nguyễn</div>
+                    <div class="podium-user-score">
+                        <img src="assets/icons/coin.svg" class="mini-coin-egg"> 5000
+                    </div>
+                </div>
+
+                <!-- Rank 2 (Left) -->
+                <div class="podium-winner-col rank-2-col">
+                    <div class="avatar-crown-wrap">
+                        <img src="assets/avatars/avatar_tiger.svg" class="podium-avatar">
+                        <span class="rank-tag rank-2-tag">2</span>
+                    </div>
+                    <div class="podium-user-name">vanhuy</div>
+                    <div class="podium-user-score">
+                        <img src="assets/icons/coin.svg" class="mini-coin-egg"> 2500
+                    </div>
+                </div>
+
+                <!-- Rank 3 (Right) -->
+                <div class="podium-winner-col rank-3-col">
+                    <div class="avatar-crown-wrap">
+                        <img src="assets/avatars/avatar1.svg" class="podium-avatar">
+                        <span class="rank-tag rank-3-tag">3</span>
+                    </div>
+                    <div class="podium-user-name">Van Nhan Hoa</div>
+                    <div class="podium-user-score">
+                        <img src="assets/icons/coin.svg" class="mini-coin-egg"> 2500
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 2. Today's Revenue Rank Modal (Matching Media 4) -->
+    <div class="modal-overlay" id="revenueRankModal">
+        <div class="modal-backdrop"></div>
+        <div class="revenue-rank-card">
+            <div class="revenue-header">
+                <h3>Today's Revenue Rank</h3>
+                <button class="revenue-close-btn" id="closeRankBtn">&times;</button>
+            </div>
+            
+            <div class="revenue-table-header">
+                <div class="th-rank">Ranking</div>
+                <div class="th-profile">Profile</div>
+                <div class="th-name">Name</div>
+                <div class="th-revenue">Revenue</div>
+            </div>
+
+            <div class="revenue-table-body" id="revenueRankList">
+                <!-- Populated dynamically from MySQL database -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Rules Modal -->
+    <div class="modal-overlay" id="rulesModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Game Rules &amp; Multipliers</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body rules-body">
+                <div class="rules-desc">
+                    Greedy Ferris Wheel: Place bets before the timer runs out. When the wheel stops, the highlighted winning item pays the multiplier!
+                </div>
+                <div class="rules-grid">
+                    <div class="rule-food-item"><img src="assets/icons/hotdog.svg"><div class="rule-name">Hot Dog</div><div class="rule-multi">10X</div></div>
+                    <div class="rule-food-item"><img src="assets/icons/kebab.svg"><div class="rule-name">Kebab</div><div class="rule-multi">15X</div></div>
+                    <div class="rule-food-item"><img src="assets/icons/chicken.svg"><div class="rule-name">Chicken</div><div class="rule-multi">25X</div></div>
+                    <div class="rule-food-item"><img src="assets/icons/steak.svg"><div class="rule-name">Steak</div><div class="rule-multi">45X</div></div>
+                    <div class="rule-food-item"><img src="assets/icons/tomato.svg"><div class="rule-name">Tomato</div><div class="rule-multi">5X</div></div>
+                    <div class="rule-food-item"><img src="assets/icons/corn.svg"><div class="rule-name">Corn</div><div class="rule-multi">5X</div></div>
+                    <div class="rule-food-item"><img src="assets/icons/cabbage.svg"><div class="rule-name">Cabbage</div><div class="rule-multi">5X</div></div>
+                    <div class="rule-food-item"><img src="assets/icons/carrot.svg"><div class="rule-name">Carrot</div><div class="rule-multi">5X</div></div>
+                </div>
+                <div class="combo-rules-note">
+                    <strong>Combos:</strong><br>
+                    🥗 <strong>Veg Combo (1.25x):</strong> Bets on all 4 vegetables.<br>
+                    🥗 <strong>Salad (2x):</strong> Pays 2x on vegetables.<br>
+                    🍕 <strong>Pizza (2.5x):</strong> Pays 2.5x on meats.<br>
+                    🍖 <strong>Meat Combo (4.37x):</strong> Bets on all 4 meats.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Recharge & Free Coins Modal -->
+    <div class="modal-overlay" id="rechargeModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Daily Bonus &amp; Wallet</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body recharge-body">
+                <div class="claim-bonus-box">
+                    <img src="assets/icons/coin.svg" class="bonus-coin-img" alt="Free Coins">
+                    <div class="bonus-title">Free Daily Coins!</div>
+                    <div class="bonus-sub">Claim 10,000,000 coins instantly!</div>
+                    <button class="btn-primary" id="claimFreeBtn">Claim 10,000,000 Coins</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.io & Game Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/socket.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <circle cx="50" cy="50" r="48" fill="#26A69A" stroke="#00796B" stroke-width="3" />
+  <!-- Panda face -->
+  <circle cx="50" cy="58" r="28" fill="#FFFFFF" stroke="#EEEEEE" stroke-width="2" />
+  <!-- Black panda ears -->
+  <circle cx="30" cy="36" r="9" fill="#212121" />
+  <circle cx="70" cy="36" r="9" fill="#212121" />
+  <!-- Chef Hat -->
+  <path d="M38 34 C34 24 40 14 50 14 C60 14 66 24 62 34 Z" fill="#FFFFFF" stroke="#B0BEC5" stroke-width="1.8" />
+  <rect x="36" y="32" width="28" height="6" fill="#FFFFFF" stroke="#90A4AE" stroke-width="1.5" />
+  <!-- Panda eye patches -->
+  <ellipse cx="40" cy="54" rx="6.5" ry="5" fill="#212121" transform="rotate(-15 40 54)" />
+  <circle cx="41" cy="53" r="2" fill="#FFFFFF" />
+  <ellipse cx="60" cy="54" rx="6.5" ry="5" fill="#212121" transform="rotate(15 60 54)" />
+  <circle cx="59" cy="53" r="2" fill="#FFFFFF" />
+  <!-- Nose and mouth -->
+  <polygon points="48,62 52,62 50,65" fill="#212121" />
+  <path d="M46 66 Q50 69 54 66" fill="none" stroke="#212121" stroke-width="1.8" />
+</svg>

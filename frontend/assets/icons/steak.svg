@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <radialGradient id="stkGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FF5252" />
+      <stop offset="45%" stop-color="#D32F2F" />
+      <stop offset="85%" stop-color="#C2185B" />
+      <stop offset="100%" stop-color="#880E4F" />
+    </radialGradient>
+  </defs>
+  <!-- 3D depth shadow -->
+  <path d="M16 54 C14 38 26 26 46 26 C66 26 84 32 88 44 C92 56 86 70 76 78 C62 88 34 86 22 78 C16 72 16 64 16 54 Z" fill="#4E342E" />
+  
+  <!-- Main Juicy Steak Cut -->
+  <path d="M14 48 C12 32 24 22 44 22 C64 22 82 28 86 38 C90 50 84 64 74 72 C60 82 32 80 20 72 C14 66 14 58 14 48 Z" fill="url(#stkGrad)" stroke="#4A0000" stroke-width="3" />
+  
+  <!-- Outer Fat Ring -->
+  <path d="M18 42 C16 32 25 24 40 24 C46 24 42 27 36 29 C26 33 21 36 18 42 Z" fill="#FFF59D" opacity="0.9" />
+  
+  <!-- Rich White Marbling Streaks -->
+  <path d="M38 32 C40 42 38 52 32 62" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.9" />
+  <path d="M50 30 C54 42 56 54 60 64" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.9" />
+  <path d="M64 34 C68 44 70 54 72 62" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.9" />
+  
+  <!-- Bone / Gristle Eye in Center -->
+  <ellipse cx="45" cy="46" rx="6" ry="4.5" fill="#FFFDE7" stroke="#FFE082" stroke-width="2" />
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <linearGradient id="basketGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#D7CCC8" />
+      <stop offset="60%" stop-color="#A1887F" />
+      <stop offset="100%" stop-color="#5D4037" />
+    </linearGradient>
+  </defs>
+  <!-- Woven Basket -->
+  <path d="M15 52 C15 78 30 88 50 88 C70 88 85 78 85 52 Z" fill="url(#basketGrad)" stroke="#3E2723" stroke-width="2.5" />
+  <!-- Rim -->
+  <ellipse cx="50" cy="52" rx="36" ry="10" fill="#8D6E63" stroke="#3E2723" stroke-width="2" />
+  <!-- Weave pattern -->
+  <path d="M25 60 Q50 68 75 60" fill="none" stroke="#4E342E" stroke-width="2" />
+  <path d="M30 72 Q50 80 70 72" fill="none" stroke="#4E342E" stroke-width="2" />
+  
+  <!-- Veggies inside basket -->
+  <!-- Corn cob poking out left -->
+  <ellipse cx="32" cy="40" rx="10" ry="18" fill="#FFEB3B" stroke="#F57F17" stroke-width="2" transform="rotate(-25 32 40)" />
+  <!-- Green leaves -->
+  <path d="M42 42 C40 26 50 18 56 24 C56 34 50 42 46 44" fill="#4CAF50" stroke="#1B5E20" stroke-width="1.8" />
+  <path d="M60 40 C66 28 76 26 78 34 C72 40 66 44 62 44" fill="#81C784" stroke="#2E7D32" stroke-width="1.8" />
+  <!-- Red Tomato in center -->
+  <circle cx="50" cy="44" r="14" fill="#F44336" stroke="#B71C1C" stroke-width="2" />
+  <circle cx="48" cy="40" r="3" fill="#FF8A80" opacity="0.6" />
+  <path d="M50 30 L50 34" stroke="#2E7D32" stroke-width="3" stroke-linecap="round" />
+  <!-- Carrot on right -->
+  <path d="M64 42 C68 34 76 38 74 46 C70 54 62 58 58 56 Z" fill="#FF9800" stroke="#E65100" stroke-width="2" />
+</svg>

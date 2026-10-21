@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <radialGradient id="crustG" cx="50%" cy="50%" r="50%">
+      <stop offset="70%" stop-color="#FFA726" />
+      <stop offset="100%" stop-color="#E65100" />
+    </radialGradient>
+    <radialGradient id="cheeseG" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFEE58" />
+      <stop offset="85%" stop-color="#FBC02D" />
+      <stop offset="100%" stop-color="#F57F17" />
+    </radialGradient>
+  </defs>
+  <!-- Outer Crust Rim -->
+  <circle cx="50" cy="50" r="42" fill="url(#crustG)" stroke="#BF360C" stroke-width="2.5" />
+  <!-- Cheese bed -->
+  <circle cx="50" cy="50" r="34" fill="url(#cheeseG)" stroke="#F57F17" stroke-width="1.5" />
+  <!-- Pepperoni slices -->
+  <circle cx="36" cy="38" r="7" fill="#C62828" stroke="#8E0000" stroke-width="1.5" />
+  <circle cx="64" cy="38" r="7" fill="#C62828" stroke="#8E0000" stroke-width="1.5" />
+  <circle cx="50" cy="62" r="7.5" fill="#C62828" stroke="#8E0000" stroke-width="1.5" />
+  <circle cx="50" cy="44" r="6" fill="#C62828" stroke="#8E0000" stroke-width="1.5" />
+  <circle cx="33" cy="56" r="6.5" fill="#C62828" stroke="#8E0000" stroke-width="1.5" />
+  <circle cx="67" cy="56" r="6.5" fill="#C62828" stroke="#8E0000" stroke-width="1.5" />
+  <!-- Basil / Herb specks -->
+  <circle cx="42" cy="52" r="1.8" fill="#2E7D32" />
+  <circle cx="58" cy="50" r="1.8" fill="#2E7D32" />
+  <circle cx="46" cy="32" r="1.8" fill="#2E7D32" />
+  <circle cx="54" cy="34" r="1.8" fill="#2E7D32" />
+</svg>

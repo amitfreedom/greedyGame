@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="#EF5350" stroke="#C62828" stroke-width="3" />
+  <!-- Lion face -->
+  <circle cx="50" cy="58" r="28" fill="#FFB74D" stroke="#E65100" stroke-width="2" />
+  <!-- Mane -->
+  <circle cx="50" cy="56" r="34" fill="none" stroke="#FF9800" stroke-width="6" stroke-dasharray="8 4" />
+  <!-- King Crown -->
+  <polygon points="28,34 32,18 42,26 50,14 58,26 68,18 72,34" fill="#FFD54F" stroke="#FF8F00" stroke-width="2" />
+  <circle cx="50" cy="14" r="3" fill="#E91E63" />
+  <circle cx="32" cy="18" r="2.5" fill="#2196F3" />
+  <circle cx="68" cy="18" r="2.5" fill="#4CAF50" />
+  <!-- Eyes -->
+  <ellipse cx="42" cy="54" rx="3.5" ry="4" fill="#212121" />
+  <circle cx="43" cy="53" r="1.2" fill="#FFFFFF" />
+  <ellipse cx="58" cy="54" rx="3.5" ry="4" fill="#212121" />
+  <circle cx="59" cy="53" r="1.2" fill="#FFFFFF" />
+  <!-- Nose / Whiskers -->
+  <polygon points="47,62 53,62 50,66" fill="#BF360C" />
+  <path d="M47 67 Q50 70 53 67" fill="none" stroke="#212121" stroke-width="1.8" />
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Tomato body -->
+  <defs>
+    <radialGradient id="tomGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FF5252" />
+      <stop offset="70%" stop-color="#D32F2F" />
+      <stop offset="100%" stop-color="#9A0007" />
+    </radialGradient>
+    <linearGradient id="stemGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#81C784" />
+      <stop offset="100%" stop-color="#2E7D32" />
+    </linearGradient>
+  </defs>
+  <!-- Tomato main shape -->
+  <ellipse cx="50" cy="58" rx="36" ry="32" fill="url(#tomGrad)" stroke="#5B0505" stroke-width="2.5" />
+  <!-- Gloss highlight -->
+  <ellipse cx="38" cy="45" rx="10" ry="6" fill="#FFA4A2" opacity="0.6" transform="rotate(-20 38 45)" />
+  <!-- Green Calyx / Stem -->
+  <path d="M50 32 C48 20 46 15 42 12 C44 18 48 24 49 28" fill="none" stroke="url(#stemGrad)" stroke-width="4.5" stroke-linecap="round" />
+  <!-- Calyx Leaves -->
+  <path d="M50 30 C45 22 32 24 28 28 C36 32 44 32 49 32" fill="url(#stemGrad)" stroke="#1B5E20" stroke-width="1.5" />
+  <path d="M50 30 C55 22 68 24 72 28 C64 32 56 32 51 32" fill="url(#stemGrad)" stroke="#1B5E20" stroke-width="1.5" />
+  <path d="M50 32 C48 38 40 42 36 44 C42 40 47 36 50 32" fill="url(#stemGrad)" stroke="#1B5E20" stroke-width="1.5" />
+  <path d="M50 32 C52 38 60 42 64 44 C58 40 53 36 50 32" fill="url(#stemGrad)" stroke="#1B5E20" stroke-width="1.5" />
+  <circle cx="50" cy="32" r="3.5" fill="#2E7D32" />
+</svg>

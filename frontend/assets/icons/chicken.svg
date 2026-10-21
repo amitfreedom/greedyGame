@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <radialGradient id="roastGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FFE082" />
+      <stop offset="40%" stop-color="#FF9800" />
+      <stop offset="80%" stop-color="#E65100" />
+      <stop offset="100%" stop-color="#BF360C" />
+    </radialGradient>
+  </defs>
+  <!-- Bone -->
+  <path d="M58 54 L78 72" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" />
+  <circle cx="78" cy="69" r="6" fill="#FFFFFF" stroke="#CFD8DC" stroke-width="1.5" />
+  <circle cx="83" cy="76" r="6" fill="#FFFFFF" stroke="#CFD8DC" stroke-width="1.5" />
+  
+  <!-- Juicy Roast Drumstick -->
+  <path d="M16 44 C12 28 28 16 46 22 C60 27 68 40 68 48 C68 58 58 72 44 76 C28 80 14 62 16 44 Z" fill="url(#roastGrad)" stroke="#5D2600" stroke-width="3" />
+  
+  <!-- Crispy Golden Highlight -->
+  <ellipse cx="34" cy="34" rx="14" ry="8" fill="#FFF9C4" opacity="0.65" transform="rotate(-20 34 34)" />
+  
+  <!-- Grill marks & savory texture -->
+  <path d="M30 46 C36 49 42 46 48 50" fill="none" stroke="#8D3C00" stroke-width="2.8" stroke-linecap="round" />
+  <path d="M26 56 C32 60 38 56 44 60" fill="none" stroke="#8D3C00" stroke-width="2.8" stroke-linecap="round" />
+</svg>
